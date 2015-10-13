@@ -1,6 +1,7 @@
 # Logs
 logs
 *.log
+Backend/*.log
 
 # Runtime data
 pids
@@ -25,3 +26,10 @@ build/Release
 # Dependency directory
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules
+
+#IDE files
+.idea
+
+#Backend Structural files
+Backend/node_modules
+Backend/typings

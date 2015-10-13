@@ -1,0 +1,10 @@
+{
+  "name": "meanTemplate",
+  "version": "0.0.1",
+  "dependencies": {
+    "body-parser": "latest",
+    "express": "latest",
+    "mongodb": "latest",
+    "morgan": "^1.6.1"
+  }
+}
