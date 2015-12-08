@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">
     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.bootstrap3.css">
 
-    <!-- ui-select files -->    
+    <!-- ui-select files https://github.com/angular-ui/ui-select/ -->    
     <link rel="stylesheet" href="select.min.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
@@ -189,3 +189,11 @@
     </script>
   </body>
 </html>
+
+<!-- Messages .html -->
+<!-- 
+<p ng-message="required">Este campo é obrigatório.</p>
+<p ng-message="minlength">Este campo está muito curto.</p>
+<p ng-message="maxlength">Este campo está muito longo.</p>
+<p ng-message="email">É necessário informar um e-mail válido.</p>
+-->
