@@ -1,0 +1,191 @@
+<!doctype html>
+<html ng-app="todoApp">
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.bootstrap3.css">
+
+    <!-- ui-select files -->    
+    <link rel="stylesheet" href="select.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>  
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.14.3/ui-bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.14.3/ui-bootstrap-tpls.min.js"></script>
+
+    <script src="select.min.js"></script>
+
+    <meta charset="utf-8" />
+
+    <style>
+      body {
+        padding: 15px;
+      }
+      .select2 > .select2-choice.ui-select-match {
+        /* Because of the inclusion of Bootstrap */
+        height: 29px;
+      }
+      .selectize-control > .selectize-dropdown {
+        top: 36px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" ng-controller="ConfiguracaoController as ctrl">
+      <div class="row">
+        <div class="col-md-12 text-center">
+            <h2>Configurações</h2>      
+            <pre>{{radioModel || 'null'}}</pre>
+            <div class="btn-group">
+              <label class="btn btn-primary" ng-model="radioModel" uib-btn-radio="'Left'">Left</label>
+              <label class="btn btn-primary" ng-model="radioModel" uib-btn-radio="'Middle'">Middle</label>
+              <label class="btn btn-primary" ng-model="radioModel" uib-btn-radio="'Right'">Right</label>
+            </div>
+        </div>  
+        <div class="row">
+          <div class="col-md-12">
+            <div class="pull-right">
+              <button class="btn btn-success" ng-click="open()">
+                <i class="fa fa-save"></i> Novo
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <table class="table table-condensed table-hover table-striped">
+              <thead>
+                <tr>
+                  <th>Nº</th>
+                  <th>Descrição</th>
+                  <th>Situação</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="config in configuracoes">
+                  <td>{{config.Id}}</td>  
+                  <td>{{config.Descricao}}</td>  
+                  <td>{{config.Situacao}}</td>  
+                  <td>
+                    <button ng-click="open(config)" class="btn btn-primary">
+                      <i class="fa fa-edit"></i>
+                    </button>
+                  </td>  
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>      
+      </div>
+      <script type="text/ng-template" id="formConfiguracao.html">
+        <form name="configForm" ng-submit="submitForm(userForm.$valid)" novalidate>
+          <div class="modal-header">
+            <h3 class="modal-title">{{TextoTituloModal}}</h3>
+          </div>
+          <div class="modal-body">            
+            <div class="form-group">
+              <label class="form-label">Nº</label>
+              <input type="text" name="NumeroConfiguracao" class="form-control" ng-model="config.Id" disabled='disabled'>
+            </div>          
+            <div class="form-group" ng-class="{ 'has-error': configForm.DescricaoConfiguracao.$touched && configForm.DescricaoConfiguracao.$invalid }">
+              <label class="form-label">Descrição</label>
+              <input type="text" name="DescricaoConfiguracao" class="form-control" ng-model="config.Descricao" required='required'>
+              <div ng-messages="configForm.DescricaoConfiguracao.$error" ng-if="configForm.DescricaoConfiguracao.$touched" class="help-block">
+                <!--p ng-message="required">Descrição é obrigatória.</p-->
+                <div ng-messages-include="messages.html"></div>
+              </div>
+              <!--p ng-show="configForm.DescricaoConfiguracao.$invalid && !configForm.DescricaoConfiguracao.$pristine" class="help-block">Descrição é obrigatória.</p-->
+            </div>
+            <div class="form-group">
+              <ui-select  ng-model="address.selected"
+                          theme="bootstrap"
+                          ng-disabled="disabled"
+                          reset-search-input="false"
+                          style="width: 300px;"
+                          title="Choose an address">
+                <ui-select-match placeholder="Enter an address...">{{$select.selected.formatted_address}}</ui-select-match>
+                  <ui-select-choices  repeat="address in addresses track by $index"
+                                      refresh="refreshAddresses($select.search)"
+                                      refresh-delay="0">
+                    <div ng-bind-html="address.formatted_address | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="submit" ng-disabled="configForm.$invalid">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+      </form>
+    </script>    
+    </div>
+      
+
+    <script>
+      angular.module('todoApp', ['ui.bootstrap','ngMessages'] )
+        .controller('ConfiguracaoController', function($scope, $uibModal){
+
+          $scope.radioModel = 'Middle';
+
+          $scope.configuracoes = [
+            {Id:1, Descricao:"Descricao 1", Situacao:"Ativo"},
+            {Id:2, Descricao:"Descricao 2", Situacao:"Inativo"},
+            {Id:3, Descricao:"Descricao 3", Situacao:"Inativo"},
+            {Id:4, Descricao:"Descricao 4", Situacao:"Ativo"},
+          ];          
+
+          $scope.open = function(configItem){
+            var modalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'formConfiguracao.html',
+                controller: 'ConfiguracaoModalController',
+                size: 'lg',
+                resolve:{
+                  item: function(){
+                    return configItem;
+                  }
+                }
+            });
+
+            modalInstance.result.then(function(item){
+              $scope.itemSelecionado = item;
+            }, function(){
+              console.log('Modal Dismissed at: ' + new Date());
+            });
+          };
+          
+        })
+
+        .controller('ConfiguracaoModalController', function($scope,$uibModalInstance, item){
+            $scope.submitForm = function(isValid){
+              if(isValid){
+                alert("our form is amazing");
+              }
+            }
+
+            $scope.address = {};
+            $scope.refreshAddresses = function(address) {
+              var params = {address: address, sensor: false};
+              return $http.get(
+                'http://maps.googleapis.com/maps/api/geocode/json',
+                {params: params}
+              ).then(function(response) {
+                $scope.addresses = response.data.results;
+              });
+            };
+
+            $scope.ok = function () {
+             $uibModalInstance.close($scope.selected.item);
+            };
+
+            $scope.cancel = function () {
+              $uibModalInstance.dismiss('cancel');
+            };
+        });
+    </script>
+  </body>
+</html>
